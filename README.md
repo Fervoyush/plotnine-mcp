@@ -271,8 +271,8 @@ Available base themes:
 
 - `cartesian` (default)
 - `flip` (swap x and y)
-- `polar` (for pie charts)
 - `fixed` (fixed aspect ratio)
+- `trans` (transformed coordinates)
 
 ## Output
 
