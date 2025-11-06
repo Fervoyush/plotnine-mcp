@@ -1,6 +1,8 @@
 # Plotnine MCP Server
 
-A modular Model Context Protocol (MCP) server for creating highly customizable plotnine visualizations through chat. Built on the grammar of graphics philosophy, this server allows you to create complex plots by composing simple, declarative components.
+> **A Model Context Protocol (MCP) server that brings ggplot2's grammar of graphics to Python through plotnine, enabling AI-powered data visualization via natural language.**
+
+Create publication-quality statistical graphics through chat using plotnine's Python implementation of R's beloved ggplot2. This modular MCP server allows Claude and other AI assistants to generate highly customizable visualizations by composing layers through the grammar of graphics paradigm.
 
 ## Features
 
