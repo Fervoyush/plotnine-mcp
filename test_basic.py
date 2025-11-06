@@ -155,6 +155,94 @@ def test_bar_plot():
     return result
 
 
+def test_multi_layer_plot():
+    """Test creating a multi-layer plot (scatter + smooth)."""
+    print("\nTest 4: Multi-layer plot (scatter + smooth)...")
+
+    # Create data source
+    data_source = DataSource(
+        type="file", path="./examples/sample_data.csv", format="csv"
+    )
+
+    data = load_data(data_source)
+    print(f"  ✓ Data loaded: {len(data)} rows")
+
+    # Create plot with multiple geoms
+    aes_config = Aesthetics(x="x", y="y", color="category")
+    geom_configs = [
+        GeomConfig(type="point", params={"size": 3, "alpha": 0.7}),
+        GeomConfig(type="smooth", params={"method": "lm", "se": False}),
+    ]
+    theme_config = ThemeConfig(
+        base="minimal", customizations={"figure_size": [10, 6]}
+    )
+    labels_config = LabelsConfig(
+        title="Multi-Layer Plot: Points + Smooth Trend",
+        x="X Values",
+        y="Y Values",
+    )
+    output_config = OutputConfig(
+        format="png", filename="test_multi_layer.png", directory="./output"
+    )
+
+    plot = build_plot(
+        data=data,
+        aes_config=aes_config,
+        geom_configs=geom_configs,
+        theme_config=theme_config,
+        labels_config=labels_config,
+    )
+    print("  ✓ Multi-layer plot built successfully")
+
+    result = save_plot(plot, output_config)
+    print(f"  ✓ Plot saved to: {result['path']}")
+
+    return result
+
+
+def test_boxplot_with_jitter():
+    """Test boxplot with jittered points overlay."""
+    print("\nTest 5: Boxplot with jittered points...")
+
+    # Create data
+    data_source = DataSource(
+        type="file", path="./examples/sample_data.csv", format="csv"
+    )
+
+    data = load_data(data_source)
+    print(f"  ✓ Data loaded: {len(data)} rows")
+
+    # Create layered plot
+    aes_config = Aesthetics(x="category", y="y", fill="category")
+    geom_configs = [
+        GeomConfig(type="boxplot", params={"alpha": 0.7}),
+        GeomConfig(type="jitter", params={"width": 0.2, "alpha": 0.5}),
+    ]
+    theme_config = ThemeConfig(base="bw")
+    labels_config = LabelsConfig(
+        title="Boxplot with Individual Points",
+        x="Category",
+        y="Values",
+    )
+    output_config = OutputConfig(
+        format="png", filename="test_boxplot_jitter.png", directory="./output"
+    )
+
+    plot = build_plot(
+        data=data,
+        aes_config=aes_config,
+        geom_configs=geom_configs,
+        theme_config=theme_config,
+        labels_config=labels_config,
+    )
+    print("  ✓ Boxplot with jitter built successfully")
+
+    result = save_plot(plot, output_config)
+    print(f"  ✓ Plot saved to: {result['path']}")
+
+    return result
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -170,6 +258,12 @@ def main():
 
         # Test 3: Bar plot
         test_bar_plot()
+
+        # Test 4: Multi-layer plot
+        test_multi_layer_plot()
+
+        # Test 5: Boxplot with jitter
+        test_boxplot_with_jitter()
 
         print("\n" + "=" * 60)
         print("All tests passed! ✓")

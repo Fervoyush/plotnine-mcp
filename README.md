@@ -6,6 +6,7 @@ Create publication-quality statistical graphics through chat using plotnine's Py
 
 ## Features
 
+- **🎨 Multi-Layer Plots**: Combine multiple geometries in a single plot (scatter + trend lines, boxplots + jitter, etc.)
 - **Multiple Data Sources**: Load data from files (CSV, JSON, Parquet, Excel), URLs, or inline JSON
 - **Grammar of Graphics**: Compose plots using aesthetics, geometries, scales, themes, facets, and coordinates
 - **20+ Geometry Types**: Points, lines, bars, histograms, boxplots, violins, and more
@@ -288,6 +289,77 @@ List all available geometry types with descriptions.
 }
 ```
 
+### Multi-Layer Plot: Scatter + Smooth Trend
+
+**NEW!** Layer multiple geometries to create complex visualizations:
+
+```json
+{
+  "data_source": {
+    "type": "file",
+    "path": "./data/measurements.csv"
+  },
+  "aes": {
+    "x": "time",
+    "y": "value",
+    "color": "sensor"
+  },
+  "geoms": [
+    {
+      "type": "point",
+      "params": {"size": 2, "alpha": 0.6}
+    },
+    {
+      "type": "smooth",
+      "params": {"method": "lm", "se": false}
+    }
+  ],
+  "theme": {
+    "base": "minimal",
+    "customizations": {"figure_size": [12, 6]}
+  },
+  "labels": {
+    "title": "Sensor Readings with Trend Lines",
+    "x": "Time",
+    "y": "Measurement"
+  }
+}
+```
+
+### Boxplot with Jittered Points
+
+Show both distribution summary and individual data points:
+
+```json
+{
+  "data_source": {
+    "type": "file",
+    "path": "./data/experiment.csv"
+  },
+  "aes": {
+    "x": "treatment",
+    "y": "response",
+    "fill": "treatment"
+  },
+  "geoms": [
+    {
+      "type": "boxplot",
+      "params": {"alpha": 0.7}
+    },
+    {
+      "type": "jitter",
+      "params": {"width": 0.2, "alpha": 0.5, "size": 1}
+    }
+  ],
+  "theme": {
+    "base": "bw"
+  },
+  "labels": {
+    "title": "Treatment Effects with Individual Observations"
+  }
+}
+```
+
 ## Chat Examples
 
 You can create plots through natural language:
@@ -299,6 +371,10 @@ You can create plots through natural language:
 **"Plot a line chart from sales.csv with date on x-axis and revenue on y-axis, faceted by region, using a dark theme"**
 
 **"Create a violin plot comparing distributions of test scores across different schools"**
+
+**"Make a boxplot with individual points overlaid showing temperature by season"**
+
+**"Create a scatter plot with a linear trend line for each category, showing the relationship between hours studied and test scores"**
 
 ## Configuration Options
 

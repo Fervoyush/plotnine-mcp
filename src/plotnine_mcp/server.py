@@ -40,8 +40,11 @@ This tool allows you to create highly customizable plots using the grammar of gr
 You can specify data sources (file, URL, or inline), aesthetic mappings, geometries,
 scales, themes, facets, labels, and coordinate systems.
 
+NEW: Multi-layer plots! Use 'geoms' array to combine multiple geometries in one plot.
+
 Example usage:
 - Simple scatter plot: provide data_source, aes (x, y), and geom (type: "point")
+- Multi-layer plot: use geoms array with multiple geometries (e.g., point + smooth)
 - Line plot with custom theme: add theme config with base and customizations
 - Faceted plot: include facet config to split by categorical variables
 - Multiple scales: provide list of scale configs for x, y, color, etc.
@@ -93,7 +96,7 @@ All parameters support extensive customization through nested objects.""",
                     },
                     "geom": {
                         "type": "object",
-                        "description": "Geometry specification",
+                        "description": "Single geometry specification (use 'geoms' for multi-layer plots)",
                         "properties": {
                             "type": {
                                 "type": "string",
@@ -105,6 +108,24 @@ All parameters support extensive customization through nested objects.""",
                             },
                         },
                         "required": ["type"],
+                    },
+                    "geoms": {
+                        "type": "array",
+                        "description": "Multiple geometry specifications for layered plots (e.g., scatter + smooth, boxplot + jitter)",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Geometry type: point, line, bar, histogram, boxplot, violin, area, density, smooth, jitter, tile, text, errorbar, hline, vline, abline, path, polygon, ribbon, col",
+                                },
+                                "params": {
+                                    "type": "object",
+                                    "description": "Additional geom parameters (e.g., size, alpha, color, fill, etc.)",
+                                },
+                            },
+                            "required": ["type"],
+                        },
                     },
                     "scales": {
                         "type": "array",
@@ -237,7 +258,7 @@ All parameters support extensive customization through nested objects.""",
                         },
                     },
                 },
-                "required": ["data_source", "aes", "geom"],
+                "required": ["data_source", "aes"],
             },
         ),
         Tool(
@@ -271,7 +292,22 @@ async def create_plot_handler(arguments: dict[str, Any]) -> list[TextContent]:
         # Parse and validate arguments
         data_source = DataSource(**arguments["data_source"])
         aes_config = Aesthetics(**arguments["aes"])
-        geom_config = GeomConfig(**arguments["geom"])
+
+        # Handle geom vs geoms (backward compatibility)
+        geom_config = None
+        geom_configs = None
+        if "geom" in arguments and arguments["geom"]:
+            geom_config = GeomConfig(**arguments["geom"])
+        if "geoms" in arguments and arguments["geoms"]:
+            geom_configs = [GeomConfig(**g) for g in arguments["geoms"]]
+
+        if not geom_config and not geom_configs:
+            return [
+                TextContent(
+                    type="text",
+                    text="Error: Either 'geom' or 'geoms' must be provided.\n\nUse 'geom' for single layer or 'geoms' for multi-layer plots.",
+                )
+            ]
 
         # Optional configurations
         scales = None
@@ -317,6 +353,7 @@ async def create_plot_handler(arguments: dict[str, Any]) -> list[TextContent]:
                 data=data,
                 aes_config=aes_config,
                 geom_config=geom_config,
+                geom_configs=geom_configs,
                 scales=scales,
                 theme_config=theme_config,
                 facet_config=facet_config,

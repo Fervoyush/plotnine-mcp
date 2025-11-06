@@ -128,7 +128,8 @@ GEOM_MAP = {
 def build_plot(
     data: pd.DataFrame,
     aes_config: Aesthetics,
-    geom_config: GeomConfig,
+    geom_config: Optional[GeomConfig] = None,
+    geom_configs: Optional[list[GeomConfig]] = None,
     scales: Optional[list[ScaleConfig]] = None,
     theme_config: Optional[ThemeConfig] = None,
     facet_config: Optional[FacetConfig] = None,
@@ -142,7 +143,8 @@ def build_plot(
     Args:
         data: DataFrame to plot
         aes_config: Aesthetic mappings
-        geom_config: Geometry configuration
+        geom_config: Single geometry configuration (deprecated, use geom_configs)
+        geom_configs: List of geometry configurations for multi-layer plots
         scales: Scale configurations
         theme_config: Theme configuration
         facet_config: Facet configuration
@@ -157,14 +159,21 @@ def build_plot(
         PlotBuildError: If plot cannot be built
     """
     try:
+        # Handle backward compatibility: convert single geom to list
+        if geom_config and not geom_configs:
+            geom_configs = [geom_config]
+        elif not geom_configs:
+            raise PlotBuildError("Either geom_config or geom_configs must be provided")
+
         # Build aesthetics
         aes_obj = _build_aesthetics(aes_config)
 
         # Start with base plot
         plot = ggplot(data, aes_obj)
 
-        # Add geometry
-        plot = plot + _build_geom(geom_config)
+        # Add geometries (multiple layers)
+        for geom_cfg in geom_configs:
+            plot = plot + _build_geom(geom_cfg)
 
         # Add statistical transformations if any
         if stats:
