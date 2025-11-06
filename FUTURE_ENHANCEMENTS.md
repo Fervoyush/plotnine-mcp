@@ -13,7 +13,7 @@ This document outlines potential improvements and new features for the plotnine 
 
 ## ✅ Completed Features
 
-- [x] Multi-layer plots support (v0.2.0)
+- [x] Multi-layer plots support
 - [x] 20+ geometry types
 - [x] Multiple data sources (file, URL, inline)
 - [x] Comprehensive theming and customization
@@ -667,5 +667,5 @@ We welcome suggestions! To propose new features:
 ---
 
 **Last Updated:** 2025-11-06
-**Current Version:** v0.2.0 (with multi-layer support)
-**Next Milestone:** v0.3.0 - Quick wins + plot templates
+**Current Version:** v0.1.0 (development with multi-layer support)
+**Next Milestone:** v1.0.0 - Official release (when ready)
