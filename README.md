@@ -34,7 +34,9 @@ For full functionality (parquet and Excel support):
 pip install -e ".[full]"
 ```
 
-### 3. Configure Claude Desktop
+### 3. Configure Your MCP Client
+
+#### Claude Desktop
 
 Add the server to your Claude Desktop configuration file:
 
@@ -65,9 +67,58 @@ If you installed in a virtual environment, use the full path to python:
 }
 ```
 
-### 4. Restart Claude Desktop
+#### Cursor
 
-The plotnine MCP server should now be available!
+Add to your Cursor settings by opening the command palette (`Cmd/Ctrl+Shift+P`) and searching for "Preferences: Open User Settings (JSON)". Add:
+
+```json
+{
+  "mcp.servers": {
+    "plotnine": {
+      "command": "python",
+      "args": ["-m", "plotnine_mcp.server"]
+    }
+  }
+}
+```
+
+Or configure via `.cursor/mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "plotnine": {
+      "command": "python",
+      "args": ["-m", "plotnine_mcp.server"]
+    }
+  }
+}
+```
+
+#### VSCode (with Cline/Roo-Cline)
+
+Add to your VSCode MCP settings file:
+
+**macOS/Linux**: `~/.config/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/cline_mcp_settings.json`
+
+**Windows**: `%APPDATA%\Code\User\globalStorage\rooveterinaryinc.roo-cline\settings\cline_mcp_settings.json`
+
+```json
+{
+  "mcpServers": {
+    "plotnine": {
+      "command": "python",
+      "args": ["-m", "plotnine_mcp.server"]
+    }
+  }
+}
+```
+
+For other MCP clients in VSCode, consult their specific documentation for MCP server configuration.
+
+### 4. Restart Your Application
+
+Restart Claude Desktop, Cursor, or VSCode for the changes to take effect. The plotnine MCP server should now be available!
 
 ## Usage
 
