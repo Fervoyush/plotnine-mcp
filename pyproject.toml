@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "plotnine-mcp"
+version = "0.1.0"
+description = "A modular MCP server for creating plotnine visualizations through chat"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Ayush Praveen" }
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "plotnine>=0.13.0",
+    "pandas>=2.0.0",
+    "pillow>=10.0.0",
+    "requests>=2.31.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+full = [
+    "pyarrow>=14.0.0",  # For parquet support
+    "openpyxl>=3.1.0",  # For Excel support
+]
+
+[project.scripts]
+plotnine-mcp = "plotnine_mcp.server:main"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
