@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/fervoyush-plotnine-mcp-badge.png)](https://mseep.ai/app/fervoyush-plotnine-mcp)
+
 # Plotnine MCP Server
 
 > **A Model Context Protocol (MCP) server that brings ggplot2's grammar of graphics to Python through plotnine, enabling AI-powered data visualization via natural language.**
