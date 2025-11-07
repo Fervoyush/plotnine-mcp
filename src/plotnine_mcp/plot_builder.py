@@ -92,6 +92,11 @@ from .schemas import (
     StatConfig,
     OutputConfig,
 )
+from .error_utils import (
+    format_column_error,
+    format_geom_error,
+    format_theme_error,
+)
 
 
 class PlotBuildError(Exception):
@@ -122,6 +127,17 @@ GEOM_MAP = {
     "path": geom_path,
     "polygon": geom_polygon,
     "ribbon": geom_ribbon,
+}
+
+THEME_MAP = {
+    "gray": theme_gray,
+    "grey": theme_gray,
+    "bw": theme_bw,
+    "minimal": theme_minimal,
+    "classic": theme_classic,
+    "dark": theme_dark,
+    "light": theme_light,
+    "void": theme_void,
 }
 
 
@@ -164,6 +180,48 @@ def build_plot(
             geom_configs = [geom_config]
         elif not geom_configs:
             raise PlotBuildError("Either geom_config or geom_configs must be provided")
+
+        # Validate column names exist in data
+        available_columns = data.columns.tolist()
+        columns_to_check = []
+
+        # Collect all column references from aesthetics
+        if aes_config.x:
+            columns_to_check.append(aes_config.x)
+        if aes_config.y:
+            columns_to_check.append(aes_config.y)
+        if aes_config.color:
+            columns_to_check.append(aes_config.color)
+        if aes_config.fill:
+            columns_to_check.append(aes_config.fill)
+        if aes_config.size:
+            columns_to_check.append(aes_config.size)
+        if aes_config.alpha:
+            columns_to_check.append(aes_config.alpha)
+        if aes_config.shape:
+            columns_to_check.append(aes_config.shape)
+        if aes_config.linetype:
+            columns_to_check.append(aes_config.linetype)
+        if aes_config.group:
+            columns_to_check.append(aes_config.group)
+
+        # Check if facet columns exist
+        if facet_config:
+            if facet_config.facets:
+                # Extract column names from formula (e.g., "~ var" or "row ~ col")
+                facet_formula = facet_config.facets.replace("~", "").strip()
+                if facet_formula and facet_formula != ".":
+                    facet_cols = [c.strip() for c in facet_formula.split("+")]
+                    columns_to_check.extend(facet_cols)
+            if facet_config.rows:
+                columns_to_check.append(facet_config.rows)
+            if facet_config.cols:
+                columns_to_check.append(facet_config.cols)
+
+        # Validate all columns
+        for col in columns_to_check:
+            if col and col != "." and col not in available_columns:
+                raise PlotBuildError(format_column_error(col, available_columns))
 
         # Build aesthetics
         aes_obj = _build_aesthetics(aes_config)
@@ -239,7 +297,7 @@ def _build_geom(geom_config: GeomConfig):
 
     if geom_type not in GEOM_MAP:
         raise PlotBuildError(
-            f"Unknown geom type: {geom_type}. Available: {', '.join(GEOM_MAP.keys())}"
+            format_geom_error(geom_type, list(GEOM_MAP.keys()))
         )
 
     geom_class = GEOM_MAP[geom_type]
@@ -285,24 +343,12 @@ def _build_theme(theme_config: ThemeConfig):
     """Build theme from configuration."""
     base_theme_name = theme_config.base.lower()
 
-    # Map theme names to functions
-    theme_map = {
-        "gray": theme_gray,
-        "grey": theme_gray,
-        "bw": theme_bw,
-        "minimal": theme_minimal,
-        "classic": theme_classic,
-        "dark": theme_dark,
-        "light": theme_light,
-        "void": theme_void,
-    }
-
-    if base_theme_name not in theme_map:
+    if base_theme_name not in THEME_MAP:
         raise PlotBuildError(
-            f"Unknown theme: {base_theme_name}. Available: {', '.join(theme_map.keys())}"
+            format_theme_error(base_theme_name, list(THEME_MAP.keys()))
         )
 
-    base_theme = theme_map[base_theme_name]()
+    base_theme = THEME_MAP[base_theme_name]()
 
     # Apply customizations if any
     if theme_config.customizations:

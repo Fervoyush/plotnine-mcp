@@ -6,14 +6,30 @@ Create publication-quality statistical graphics through chat using plotnine's Py
 
 ## Features
 
+### Core Visualization
 - **🎨 Multi-Layer Plots**: Combine multiple geometries in a single plot (scatter + trend lines, boxplots + jitter, etc.)
-- **Multiple Data Sources**: Load data from files (CSV, JSON, Parquet, Excel), URLs, or inline JSON
 - **Grammar of Graphics**: Compose plots using aesthetics, geometries, scales, themes, facets, and coordinates
 - **20+ Geometry Types**: Points, lines, bars, histograms, boxplots, violins, and more
+- **Multiple Data Sources**: Load data from files (CSV, JSON, Parquet, Excel), URLs, or inline JSON
+- **Multiple Output Formats**: PNG, PDF, SVG with configurable dimensions and DPI
+
+### Smart Features (NEW!)
+- **📋 9 Plot Templates**: Pre-configured templates for common patterns (time series, scatter with trend, distribution comparison, etc.)
+- **🤖 AI Template Suggestions**: Analyzes your data and recommends appropriate plot types
+- **🎨 21 Color Palettes**: Colorblind-safe, scientific, categorical, corporate, sequential, and diverging palettes
+- **📊 Data Preview**: Inspect data before plotting with comprehensive summaries
+- **🎯 Smart Error Messages**: Fuzzy matching suggests corrections for typos in column names, geom types, and themes
+- **💾 Config Export/Import**: Save and reuse plot configurations as JSON files
+
+### Data Manipulation (NEW!)
+- **🔄 12 Data Transformations**: filter, group_summarize, sort, select, rename, mutate, drop_na, fill_na, sample, unique, rolling, pivot
+- **⚡ Batch Processing**: Create multiple plots in one operation
+- **🔗 Chained Transforms**: Apply multiple transformations in sequence
+
+### Theming & Customization
 - **Flexible Theming**: Built-in themes with extensive customization options
 - **Statistical Transformations**: Add smoothing, binning, density estimation, and summaries
 - **Faceting**: Split plots by categorical variables using wrap or grid layouts
-- **Multiple Output Formats**: PNG, PDF, SVG with configurable dimensions and DPI
 
 ## Installation
 
@@ -141,41 +157,124 @@ Create a line plot from sales_data.csv showing:
 - Save as PDF
 ```
 
-## Available Tools
+## Available Tools (11 Total)
 
-### create_plot
+### Core Tools
+
+#### create_plot
 
 Create a plotnine visualization with full customization.
 
 **Required Parameters:**
 - `data_source`: Data source configuration
-  - `type`: "file", "url", or "inline"
-  - `path`: File path or URL (for file/url types)
-  - `data`: Array of objects (for inline type)
-  - `format`: "csv", "json", "parquet", or "excel" (auto-detected)
-
 - `aes`: Aesthetic mappings (column names)
-  - `x`, `y`: Axis variables
-  - `color`, `fill`: Color aesthetics
-  - `size`, `alpha`, `shape`, `linetype`: Additional aesthetics
-  - `group`: Grouping variable
-
-- `geom`: Geometry specification
-  - `type`: Geometry type (point, line, bar, etc.)
-  - `params`: Additional parameters (size, alpha, color, etc.)
+- `geom` or `geoms`: Geometry specification(s)
 
 **Optional Parameters:**
 - `scales`: Array of scale configurations
-- `theme`: Theme configuration with base and customizations
+- `theme`: Theme configuration
 - `facets`: Faceting configuration
 - `labels`: Plot labels (title, x, y, caption, subtitle)
 - `coords`: Coordinate system configuration
 - `stats`: Statistical transformations
+- `transforms`: Data transformations (NEW!)
 - `output`: Output configuration (format, size, DPI, directory)
 
-### list_geom_types
+#### list_geom_types
 
-List all available geometry types with descriptions.
+List all 20+ available geometry types with descriptions.
+
+### Data Tools (NEW!)
+
+#### preview_data
+
+Preview and inspect data before creating plots. Returns dataset shape, column types, first rows, statistics, and missing values.
+
+**Parameters:**
+- `data_source`: Data source configuration
+- `rows`: Number of rows to preview (default: 5)
+
+### Template Tools (NEW!)
+
+#### list_plot_templates
+
+List all 9 available plot templates with descriptions:
+- time_series
+- scatter_with_trend
+- distribution_comparison
+- category_breakdown
+- correlation_heatmap
+- boxplot_comparison
+- multi_line
+- histogram_with_density
+- before_after
+
+#### create_plot_from_template
+
+Create a plot using a predefined template. Just provide data and aesthetics; the template handles the rest.
+
+**Parameters:**
+- `template_name`: Name of the template
+- `data_source`: Data source configuration
+- `aes`: Aesthetic mappings
+- `labels`: Optional labels
+- `output`: Optional output config
+- `overrides`: Optional overrides for template settings
+
+#### suggest_plot_templates
+
+Analyze your data and get AI-powered plot recommendations based on column types and optional goal.
+
+**Parameters:**
+- `data_source`: Data source to analyze
+- `goal`: Optional goal (e.g., "compare distributions", "show trend")
+
+### Style Tools (NEW!)
+
+#### list_themes
+
+List all available themes for plot styling with descriptions and customization options.
+
+#### list_color_palettes
+
+List 21 color palettes across 6 categories:
+- Colorblind-safe (3 palettes)
+- Scientific (4 palettes)
+- Categorical (4 palettes)
+- Corporate (3 palettes)
+- Sequential (4 palettes)
+- Diverging (3 palettes)
+
+**Parameters:**
+- `category`: Optional category filter
+
+### Configuration Tools
+
+#### export_plot_config
+
+Export plot configuration to JSON for reuse and sharing.
+
+**Parameters:**
+- `config`: The plot configuration to export
+- `filename`: Output filename
+- `directory`: Output directory (default: './plot_configs')
+
+#### import_plot_config
+
+Import and use a saved plot configuration with optional overrides.
+
+**Parameters:**
+- `config_path`: Path to saved configuration
+- `overrides`: Optional parameter overrides
+
+### Batch Tools (NEW!)
+
+#### batch_create_plots
+
+Create multiple plots in one operation. Perfect for generating plots for all columns, pairwise comparisons, or different visualizations of the same data.
+
+**Parameters:**
+- `plots`: Array of plot configurations
 
 ## Geometry Types
 
@@ -375,6 +474,69 @@ You can create plots through natural language:
 **"Make a boxplot with individual points overlaid showing temperature by season"**
 
 **"Create a scatter plot with a linear trend line for each category, showing the relationship between hours studied and test scores"**
+
+### Using New Tools
+
+**"Preview the data from sales.csv before plotting"**
+
+**"What themes are available?"**
+
+**"Show me all available plot templates"**
+
+**"Suggest appropriate plot types for my data"**
+
+**"Create a time series plot using the template"**
+
+**"List color palettes in the scientific category"**
+
+**"Export this plot configuration so I can reuse it later"**
+
+**"Load the plot config from my_config.json and use it with a different dataset"**
+
+**"Create a plot from the saved configuration but change the theme to minimal"**
+
+**"Create plots for each category in my dataset"** (batch processing)
+
+**"Filter the data to show only active users, then create a histogram"** (data transformations)
+
+## New Examples
+
+### Using Templates
+
+Create a scatter plot with trend line using a template:
+
+```
+"Use the scatter_with_trend template to plot height vs weight from my data"
+```
+
+This automatically creates a plot with:
+- Scatter points (with transparency)
+- Linear regression line
+- Confidence interval
+- Minimal theme
+
+### Using Color Palettes
+
+```
+"Create a bar chart colored using the colorblind-safe Okabe-Ito palette"
+```
+
+### Data Transformations
+
+```
+"Filter sales data to show only Q4, group by region, sum the revenue, and create a bar chart"
+```
+
+This applies transformations before plotting:
+1. Filter: `"quarter == 'Q4'"`
+2. Group & summarize: by region, sum revenue
+3. Plot: bar chart of results
+
+### Batch Processing
+
+```
+"Create histogram plots for all numeric columns in my dataset"
+```
 
 ## Configuration Options
 
