@@ -4,6 +4,10 @@
 
 Create publication-quality statistical graphics through chat using plotnine's Python implementation of R's beloved ggplot2. This modular MCP server allows Claude and other AI assistants to generate highly customizable visualizations by composing layers through the grammar of graphics paradigm.
 
+<a href="https://glama.ai/mcp/servers/@Fervoyush/plotnine-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@Fervoyush/plotnine-mcp/badge" alt="Plotnine Server MCP server" />
+</a>
+
 ## Features
 
 ### Core Visualization
