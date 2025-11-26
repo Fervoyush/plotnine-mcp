@@ -53,3 +53,13 @@ Thumbs.db
 # Test files
 test_*.png
 test_*.pdf
+test_*.py
+
+# Test data directory (but keep the CSV files for examples)
+test_data/*.png
+test_data/*.pdf
+test_data/*.svg
+
+# Markdown files
+!README.md
+*.md

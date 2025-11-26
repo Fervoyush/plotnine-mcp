@@ -53,6 +53,16 @@ pip install -e ".[full]"
 
 ### 3. Configure Your MCP Client
 
+#### Finding Your Installation Path
+
+First, find where the `plotnine-mcp` command was installed:
+
+```bash
+which plotnine-mcp
+```
+
+This will show something like `/path/to/python/bin/plotnine-mcp`. Use this full path in the configurations below.
+
 #### Claude Desktop
 
 Add the server to your Claude Desktop configuration file:
@@ -61,6 +71,19 @@ Add the server to your Claude Desktop configuration file:
 
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
+**Recommended (using entry point):**
+```json
+{
+  "mcpServers": {
+    "plotnine": {
+      "command": "/path/to/your/python/bin/plotnine-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+**Alternative (using python -m):**
 ```json
 {
   "mcpServers": {
@@ -72,13 +95,13 @@ Add the server to your Claude Desktop configuration file:
 }
 ```
 
-If you installed in a virtual environment, use the full path to python:
+If you installed in a virtual environment, replace with the full path:
 ```json
 {
   "mcpServers": {
     "plotnine": {
-      "command": "/path/to/venv/bin/python",
-      "args": ["-m", "plotnine_mcp.server"]
+      "command": "/path/to/venv/bin/plotnine-mcp",
+      "args": []
     }
   }
 }
@@ -86,21 +109,33 @@ If you installed in a virtual environment, use the full path to python:
 
 #### Cursor
 
-Add to your Cursor settings by opening the command palette (`Cmd/Ctrl+Shift+P`) and searching for "Preferences: Open User Settings (JSON)". Add:
+**Recommended approach:** Configure via `.cursor/mcp.json` in your project:
 
 ```json
 {
-  "mcp.servers": {
+  "mcpServers": {
     "plotnine": {
-      "command": "python",
-      "args": ["-m", "plotnine_mcp.server"]
+      "command": "/path/to/your/python/bin/plotnine-mcp",
+      "args": []
     }
   }
 }
 ```
 
-Or configure via `.cursor/mcp.json` in your project:
+**Alternative:** Add to Cursor global settings by opening the command palette (`Cmd/Ctrl+Shift+P`) and searching for "Preferences: Open User Settings (JSON)":
 
+```json
+{
+  "mcp.servers": {
+    "plotnine": {
+      "command": "/path/to/your/python/bin/plotnine-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+**Using python -m alternative:**
 ```json
 {
   "mcpServers": {
@@ -124,8 +159,8 @@ Add to your VSCode MCP settings file:
 {
   "mcpServers": {
     "plotnine": {
-      "command": "python",
-      "args": ["-m", "plotnine_mcp.server"]
+      "command": "/path/to/your/python/bin/plotnine-mcp",
+      "args": []
     }
   }
 }

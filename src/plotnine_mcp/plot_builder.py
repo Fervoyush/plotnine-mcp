@@ -48,6 +48,8 @@ from plotnine import (
     scale_fill_discrete,
     scale_color_brewer,
     scale_fill_brewer,
+    scale_color_manual,
+    scale_fill_manual,
     # Themes
     theme_gray,
     theme_bw,
@@ -330,6 +332,8 @@ def _build_scale(scale_config: ScaleConfig):
         "scale_fill_discrete": scale_fill_discrete,
         "scale_color_brewer": scale_color_brewer,
         "scale_fill_brewer": scale_fill_brewer,
+        "scale_color_manual": scale_color_manual,
+        "scale_fill_manual": scale_fill_manual,
     }
 
     if scale_name not in scale_map:
